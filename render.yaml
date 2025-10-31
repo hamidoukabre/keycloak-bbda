@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: keycloak-bbda
+    env: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: keycloak-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: keycloak-db
+          property: port
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: keycloak-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: keycloak-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: keycloak-db
+          property: password
+databases:
+  - name: keycloak-db
+    plan: free
