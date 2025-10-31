@@ -10,7 +10,7 @@ services:
       - key: KC_DB_URL
         fromDatabase:
           name: keycloak-db
-          property: url   # Render fournit l'URL complète JDBC
+          property: url
       - key: KC_DB_USERNAME
         fromDatabase:
           name: keycloak-db
@@ -20,7 +20,7 @@ services:
           name: keycloak-db
           property: password
       - key: KC_HTTP_PORT
-        fromSecret: PORT   # Utiliser fromSecret pour la variable dynamique Render
+        fromEnv: PORT  # <- corrigé
 
 databases:
   - name: keycloak-db
