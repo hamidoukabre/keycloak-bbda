@@ -1,0 +1,420 @@
+<#macro registrationLayout bodyClass="" displayInfo=false displayMessage=true displayRequiredFields=false>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${msg("loginTitle",(realm.displayName!''))}</title>
+  <link rel="icon" href="${url.resourcesPath}/img/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* --- FOND DÉGRADÉ FIXE --- */
+    body {
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      color: #fff;
+      overflow: hidden;
+      background: linear-gradient(135deg, #d22b2b, #28a745, #FFD700);
+    }
+
+    /* --- LOGO ANIMÉ BBDA --- */
+    .burkina-flag-dashboard {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        flex-shrink: 0;
+        background: transparent;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 6px solid #d22b2b;
+        border-right-color: transparent;
+        box-shadow: 0 2px 8px rgba(210, 43, 43, 0.3);
+        margin: 0 auto 20px auto; /* centre le logo */
+    }
+
+    .burkina-flag-dashboard::before {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: calc(100% - 12px);
+        height: calc(100% - 12px);
+        background: white;
+        border-radius: 100%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        z-index: 0;
+    }
+
+    .burkina-flag-dashboard::after {
+        content: '★';
+        position: absolute;
+        top: 70%;
+        right: -18px;
+        color: #FFD700;
+        font-size: 32px;
+        text-shadow: 0 0 10px rgba(252, 209, 22, 0.8),
+                     2px 2px 4px rgba(0, 0, 0, 0.3);
+        z-index: 2;
+        animation: rotate-star 4s linear infinite;
+        transform-origin: center;
+    }
+
+    @keyframes rotate-star {
+        from { transform: translateY(-50%) rotate(0deg); }
+        to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .burkina-flag-dashboard-text {
+        position: relative;
+        color: #28a745;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        z-index: 1;
+        font-family: Georgia, serif;
+    }
+
+    /* --- CONTAINER LOGIN --- */
+    .login-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      padding: 40px 35px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+      backdrop-filter: blur(15px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- TITRES --- */
+    .main-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFD700; 
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #F5F5F5; 
+      font-weight: 400;
+      margin-bottom: 25px;
+    }
+
+    /* --- INPUTS --- */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,215,0,0.3);
+      background: #fff;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #F5F5F5;
+    }
+
+    /* --- BUTTON --- */
+    button,
+    input[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #d22b2b, #28a745);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(210,43,43,0.4);
+    }
+
+    button:hover,
+    input[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40,167,69,0.6);
+    }
+
+    /* --- LINKS --- */
+    a {
+      color: #FFD700;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* --- ALERT --- */
+    .alert {
+      background: rgba(255, 255, 255, 0.1);
+      border-left: 4px solid #FFD700;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 50px;
+      font-size: 12.5px;
+      color: #F5F5F5;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    footer span {
+      color: #FFD700;
+      font-weight: 600;
+    }
+
+    /* --- MOBILE --- */
+    @media (max-width: 480px) {
+      .login-container { padding: 30px 20px; }
+      .main-title { font-size: 24px; }
+      .burkina-flag-dashboard { width: 80px; height: 80px; }
+    }
+
+    /* --- ANIMATION MUSICALE --- */
+    .music-bars {
+      position: absolute;
+      bottom: 8%;
+      display: flex;
+      gap: 4px;
+      z-index: 0;
+      width: 60%;
+      max-width: 400px;
+      justify-content: center;
+    }
+
+    .bar {
+      width: 6px;
+      height: 20px;
+      background: #FFD700;
+      animation: bounce 1s infinite ease-in-out;
+      border-radius: 2px;
+    }
+
+    .bar:nth-child(1) { animation-delay: 0s; }
+    .bar:nth-child(2) { animation-delay: 0.2s; }
+    .bar:nth-child(3) { animation-delay: 0.4s; }
+    .bar:nth-child(4) { animation-delay: 0.6s; }
+    .bar:nth-child(5) { animation-delay: 0.8s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: scaleY(0.3); }
+      50% { transform: scaleY(1); }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <!-- Logo animé BBDA -->
+    <div class="burkina-flag-dashboard">
+      <div class="burkina-flag-dashboard-text">BBDA</div>
+    </div>
+
+    <h1 class="main-title">FASO SOUND</h1>
+    <h3 class="subtitle">Plateforme de Surveillance Musicale — BBDA</h3>
+
+    <#if displayMessage && message?has_content>
+      <div class="alert">${kcSanitize(message.summary)?no_esc}</div>
+    </#if>
+
+    <#nested "form">
+
+    <div style="margin-top:15px;">
+      <#if auth?has_content && auth.showTryAnotherWayLink()>
+        <form id="kc-select-try-another-way-form" action="${url.loginAction}" method="post">
+          <input type="hidden" name="tryAnotherWay" value="on"/>
+          <a href="#" onclick="document.forms['kc-select-try-another-way-form'].submit();return false;">${msg("doTryAnotherWay")}</a>
+        </form>
+      </#if>
+    </div>
+
+    <#nested "socialProviders">
+    <#if displayInfo><#nested "info"></#if>
+  </div>
+
+
+  <!-- Animation musicale -->
+  <div class="music-bars">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 <span>BBDA</span> — Bureau Burkinabè du Droit d’Auteur<br>
+    Tous droits réservés • <a href="https://bbda.bf" target="_blank">www.bbda.bf</a>
+  </footer>
+</body>
+</html>
+</#macro>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="layout-topbar">
+    <div class="layout-topbar-start">
+        
+        <a class="layout-topbar-logo" routerLink="/">
+            
+            <!-- Nouveau logo BBDA avec cercle rouge et étoile -->
+            <div class="burkina-flag-dashboard">
+                <span class="burkina-flag-dashboard-text"> </span>
+            </div>
+            
+            <!-- Texte BBDA stylisé à côté -->
+            <span style="font-family: 'Righteous', sans-serif; font-size: 30px; font-weight: normal; margin-left: 10px; color: #FFD700; letter-spacing: 5px; text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);">BBDA</span>
+        </a>
+
+        <a #menuButton class="layout-menu-button" (click)="onMenuButtonClick()" pRipple>
+            <i class="pi pi-chevron-right"></i>
+        </a>
+
+        <a #mobileMenuButton class="layout-topbar-mobile-button" (click)="onMobileTopbarMenuButtonClick()" pRipple>
+            <i class="pi pi-ellipsis-v"></i>
+        </a>
+    </div> 
+
+    <!-- ... reste du code ... -->
+</div>
+
+
+
+
+<style>
+/* Logo BBDA exact - Cercle rouge ouvert à droite avec étoile rotative */
+.burkina-flag-dashboard {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    flex-shrink: 0;
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cercle blanc intérieur */
+.burkina-flag-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    background: white;
+    border-radius: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 0;
+}
+
+/* Arc de cercle rouge (ouvert à droite) - AJOUT D'UN NOUVEL ÉLÉMENT */
+.burkina-flag-dashboard {
+    border: 6px solid #EF2B2D;
+    border-right-color: transparent;
+    box-shadow: 0 2px 8px rgba(239, 43, 45, 0.3);
+}
+
+/* Étoile jaune qui tourne - positionnée dans l'ouverture à droite */
+.burkina-flag-dashboard::after {
+    content: '★';
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    color: #FCD116;
+    font-size: 32px;
+    text-shadow: 0 0 10px rgba(252, 209, 22, 0.8),
+                 2px 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    animation: rotate-star 4s linear infinite;
+    transform-origin: center;
+}
+
+/* Animation de rotation de l'étoile */
+@keyframes rotate-star {
+    from { 
+        transform: translateY(-50%) rotate(0deg); 
+    }
+    to { 
+        transform: translateY(-50%) rotate(360deg); 
+    }
+}
+
+/* Texte vert "BBDA" au centre */
+.burkina-flag-dashboard-text {
+    position: relative;
+    color: #00A650;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    z-index: 1;
+    font-family: Georgia, serif;
+}
+</style>
