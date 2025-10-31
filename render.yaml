@@ -20,7 +20,7 @@ services:
           name: keycloak-db
           property: password
       - key: KC_HTTP_PORT
-        value: $PORT   # Keycloak écoute sur le port dynamique de Render
+        fromSecret: PORT   # Utiliser fromSecret pour la variable dynamique Render
 
 databases:
   - name: keycloak-db
